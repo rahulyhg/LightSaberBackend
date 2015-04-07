@@ -460,5 +460,10 @@ class Json extends CI_Controller {
         $data['message'] = $this->json_model->getuserdetails();
         $this->load->view('json', $data);
     }
+    public function logout() {
+        $this->session->sess_destroy();
+        $data['message'] = true;
+        $this->load->view('json', $data);
+    }
 
 }
