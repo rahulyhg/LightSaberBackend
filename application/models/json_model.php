@@ -15,7 +15,16 @@ class Json_model extends CI_Model {
     function getuserdetails() {
         $userid=$this->session->userdata("id");
         $user=$this->db->query("SELECT * FROM `user` WHERE `id`='$userid'")->row();
-        $user->prediction=$this->db->query("SELECT COUNT(`id`) as `prediction` FROM `predicto_userprediction` WHERE `user`='$userid'")->row();
+        $user->prediction=$this->db->query("SELECT COUNT(`id`) as `prediction` FROM `predicto_userprediction` WHERE `user`='$userid'");
+        if($user->prediction->num_rows()==0)
+        {
+          $user->prediction=0;
+        }
+        else
+        {
+          $user->prediction=$user->prediction->row();
+          $user->prediction=$user->prediction->prediction;
+        }
         $user->prediction=$user->prediction->prediction;
         return $user;
     }
