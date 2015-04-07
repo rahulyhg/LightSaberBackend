@@ -58,6 +58,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         return true;
     }
     function getpredictionforuser($predict) {
+      $userid = $this->session->userdata("id");
         $prediction = $this->db->query("SELECT `predicto_prediction`.`id`,`predicto_prediction`.`name`,`predicto_prediction`.`status`,
 `predicto_prediction`.`predictionteam` as `winner`,`predicto_prediction`.`starttime`,`predicto_prediction`.`endtime`,
 `predicto_prediction`.`venue`,`team11`.`id` as `team1id`,`team22`.`id` as `team2id`,`team11`.`name` as `team1name`,`team22`.`name` as `team2name`
@@ -73,7 +74,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
             $prediction->team1percent = - 1;
         }
         $userid = $this->session->userdata("id");
-        $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `teamgroup`='$team'");
+        $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$predict'");
         $querynum = $query->num_rows();
         if ($querynum != 0) {
             $query = $query->row();
@@ -81,9 +82,19 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         }
         $query2 = $this->db->query("SELECT * FROM `predicto_predictionhash` WHERE `prediction`='$predict'");
         $querynum2 = $query2->num_rows();
-        $hash = 0;
+        $hash = new stdClass();
         if ($querynum2 != 0) {
             $hash = $query2->result();
+            $this->load->library('HybridAuthLib');
+            $twitter = $this->hybridauthlib->authenticate("Twitter");
+            $hashstring="";
+            foreach($hash as $hashone)
+            {
+              $hashstring.="$hashone->hashtag ";
+            }
+            $hashstring= substr($hashstring,0,-1);
+            $data = $twitter->api()->get("search/tweets?q=#ipl&count=10");
+            print_r($data);
         }
         return $prediction;
     }
