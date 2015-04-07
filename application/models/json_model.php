@@ -78,7 +78,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         $querynum = $query->num_rows();
         if ($querynum != 0) {
             $query = $query->row();
-            $prediction->predicted = $query->prediction;
+            $prediction->predicted = $query->teamgroup;
         }
         $query2 = $this->db->query("SELECT * FROM `predicto_predictionhash` WHERE `prediction`='$predict'");
         $querynum2 = $query2->num_rows();
