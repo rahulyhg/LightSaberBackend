@@ -48,12 +48,12 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
     }
     function userpredicts($team, $prediction) {
         $userid = $this->session->userdata("id");
-        $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `teamgroup`='$team'");
+        $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$prediction'");
         $querynum = $query->num_rows();
         if ($querynum == 0) {
             $this->db->query("INSERT INTO `predicto_userprediction` (`id`, `user`, `teamgroup`, `prediction`) VALUES (NULL, '$userid', '$teamgroup', '$prediction')");
         } else {
-            $this->db->query("UPDATE predicto_userprediction` SET `prediction` = '$prediction' WHERE `user` = '$userid' AND  `teamgroup` = '$team'");
+            $this->db->query("UPDATE predicto_userprediction` SET `teamgroup` = '$team' WHERE `user` = '$userid' AND  `prediction` = '$prediction'");
         }
         return true;
     }
@@ -93,7 +93,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
               $hashstring.="$hashone->hashtag ";
             }
             $hashstring= substr($hashstring,0,-1);
-            $data = $twitter->api()->get("search/tweets?q=#ipl&count=10");
+            $data = $twitter->api()->get("h");
             print_r($data);
         }
         return $prediction;
