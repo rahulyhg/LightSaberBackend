@@ -109,7 +109,7 @@ $autoload['language'] = array();
 |
 */
 
-$autoload['model'] = array('user_model','menu_model','prediction_model','predictiongroup_model','predictionhash_model','predictionteam_model','sociallogin_model','teamgroup_model','userpointlog_model','userprediction_model','usershare_model','usersharehash_model');
+$autoload['model'] = array('user_model','menu_model','prediction_model','predictiongroup_model','predictionhash_model','predictionteam_model','sociallogin_model','teamgroup_model','userpointlog_model','userprediction_model','usershare_model','usersharehash_model','json_model');
 
 /* End of file autoload.php */
 /* Location: ./application/config/autoload.php */

@@ -456,4 +456,9 @@ class Json extends CI_Controller {
         $data['message'] = $this->json_model->authenticate();
         $this->load->view('json', $data);
     }
+    public function getuserdetails() {
+        $data['message'] = $this->json_model->getuserdetails();
+        $this->load->view('json', $data);
+    }
+
 }
