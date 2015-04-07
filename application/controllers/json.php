@@ -469,4 +469,11 @@ class Json extends CI_Controller {
         $data['message'] = $this->json_model->getpredictions();
         $this->load->view('json', $data);
     }
+    public function userpredicts() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $team = $data['team'];
+        $prediction = $data['prediction'];
+        $data['message'] = $this->json_model->userpredicts($team,$prediction);
+        $this->load->view('json', $data);
+    }
 }

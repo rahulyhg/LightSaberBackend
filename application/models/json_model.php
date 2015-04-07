@@ -12,16 +12,13 @@ class Json_model extends CI_Model {
     }
     function getuserdetails() {
         $userid = $this->session->userdata("id");
-
         $user = $this->db->query("SELECT * FROM `user` WHERE `id`='$userid'")->row();
         $query = $this->db->query("SELECT COUNT(`id`) as `prediction` FROM `predicto_userprediction` WHERE `user`='$userid'");
-        $querynum=$query->num_rows();
-
+        $querynum = $query->num_rows();
         if ($querynum == 0) {
             $user->prediction = 0;
         } else {
             $user->prediction = $query->row();
-
             $user->prediction = $user->prediction->prediction;
         }
         return $user;
@@ -38,5 +35,18 @@ INNER  JOIN `predicto_predictionteam` as `team2` ON `predicto_prediction`.`id`=`
 INNER  JOIN `predicto_teamgroup` as `team11` ON `team1`.`teamgroup`=`team11`.`id`
 INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id`")->result();
         return $prediction;
+    }
+    function userpredicts($team, $prediction) {
+        $userid = $this->session->userdata("id");
+        $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `teamgroup`='$team'");
+        $querynum = $query->num_rows();
+
+        if ($querynum == 0) {
+            $this->db->query("INSERT INTO `predicto_userprediction` (`id`, `user`, `teamgroup`, `prediction`) VALUES (NULL, '$userid', '$teamgroup', '$prediction')");
+        }
+         else {
+           $this->db->query("UPDATE predicto_userprediction` SET `prediction` = '$prediction' WHERE `user` = '$userid' AND  `teamgroup` = '$team'");
+        }
+        return true;
     }
 }
