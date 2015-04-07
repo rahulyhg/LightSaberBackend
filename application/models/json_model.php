@@ -22,8 +22,19 @@ class Json_model extends CI_Model {
 
     function getpredictions() {
         $userid=$this->session->userdata("id");
-        $user=$this->db->query("SELECT * FROM `user` WHERE `id`='$userid'")->row();
-      
+        $prediction=$this->db->query("SELECT `predicto_prediction`.`id`,`predicto_prediction`.`name`,`predicto_prediction`.`status`,
+`predicto_prediction`.`predictionteam` as `winner`,`predicto_prediction`.`starttime`,`predicto_prediction`.`endtime`,
+`predicto_prediction`.`venue`,`team1`.`id` as `team1id`,`team2`.`id` as `team2id`,`team11`.`name` as `team1name`,`team22`.`name` as `team2name`
+ FROM `predicto_prediction`
+
+INNER JOIN `predicto_predictionteam` as `team1` ON `predicto_prediction`.`id`=`team1`.`prediction`  AND `team1`.`order`=1
+INNER JOIN `predicto_predictionteam` as `team2` ON `predicto_prediction`.`id`=`team2`.`prediction` AND `team1`.`order`=2
+INNER JOIN `predicto_teamgroup` as `team11` ON `team1`.`teamgroup`=`team11`.`id`
+INNER JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id`
+
+WHERE 1 ORDER BY `predicto_prediction`.`order`")->result();
+        return $prediction;
+
     }
 
 

@@ -465,5 +465,8 @@ class Json extends CI_Controller {
         $data['message'] = true;
         $this->load->view('json', $data);
     }
-
+    public function getpredictions() {
+        $data['message'] = $this->json_model->getpredictions();
+        $this->load->view('json', $data);
+    }
 }
