@@ -33,12 +33,10 @@ class Json_model extends CI_Model {
 `predicto_prediction`.`venue`,`team1`.`id` as `team1id`,`team2`.`id` as `team2id`,`team11`.`name` as `team1name`,`team22`.`name` as `team2name`
  FROM `predicto_prediction`
 
-INNER JOIN `predicto_predictionteam` as `team1` ON `predicto_prediction`.`id`=`team1`.`prediction`  AND `team1`.`order`=1
-INNER JOIN `predicto_predictionteam` as `team2` ON `predicto_prediction`.`id`=`team2`.`prediction` AND `team1`.`order`=2
-INNER JOIN `predicto_teamgroup` as `team11` ON `team1`.`teamgroup`=`team11`.`id`
-INNER JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id`
-
-WHERE 1 ORDER BY `predicto_prediction`.`order`")->result();
+INNER  JOIN `predicto_predictionteam` as `team1` ON `predicto_prediction`.`id`=`team1`.`prediction`  AND `team1`.`order`=1
+INNER  JOIN `predicto_predictionteam` as `team2` ON `predicto_prediction`.`id`=`team2`.`prediction` AND `team2`.`order`=2
+INNER  JOIN `predicto_teamgroup` as `team11` ON `team1`.`teamgroup`=`team11`.`id`
+INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id`")->result();
         return $prediction;
     }
 }
