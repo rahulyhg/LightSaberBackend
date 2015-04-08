@@ -53,7 +53,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         if ($querynum == 0) {
             $this->db->query("INSERT INTO `predicto_userprediction` (`id`, `user`, `teamgroup`, `prediction`) VALUES (NULL, '$userid', '$teamgroup', '$prediction')");
         } else {
-            $this->db->query("UPDATE predicto_userprediction` SET `teamgroup` = '$team' WHERE `user` = '$userid' AND  `prediction` = '$prediction'");
+            $this->db->query("UPDATE `predicto_userprediction` SET `teamgroup` = '$team' WHERE `user` = '$userid' AND  `prediction` = '$prediction'");
         }
         return true;
     }
@@ -94,7 +94,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
             $this->config->load('twitter');
             $this->connection = $this->twitteroauth->create($this->config->item('twitter_consumer_token'), $this->config->item('twitter_consumer_secret'), $this->config->item('twitter_access_token'), $this->config->item('twitter_access_secret'));
             $hashstring=urlencode($hashstring);
-            $data = $this->twitteroauth->get('search/tweets.json?q=' . $hashstring."&count=4");
+            $data = $this->twitteroauth->get('search/tweets.json?q=' . $hashstring."&count=20");
             $prediction->tweets=$data;
         }
         return $prediction;
