@@ -1,17 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Site extends CI_Controller 
+class Site extends CI_Controller
 {
 	public function __construct( )
 	{
 		parent::__construct();
-		
+
 		$this->is_logged_in();
 	}
 	function is_logged_in( )
 	{
 		$is_logged_in = $this->session->userdata( 'logged_in' );
 		if ( $is_logged_in !== 'true' || !isset( $is_logged_in ) ) {
-			redirect( base_url() . 'index.php/login', 'refresh' );
+			redirect( base_url() . 'index.php/login/logout', 'refresh' );
 		} //$is_logged_in !== 'true' || !isset( $is_logged_in )
 	}
 	function checkaccess($access)
@@ -26,7 +26,7 @@ class Site extends CI_Controller
 		$this->checkaccess($access);
 		$data[ 'page' ] = 'dashboard';
 		$data[ 'title' ] = 'Welcome';
-		$this->load->view( 'template', $data );	
+		$this->load->view( 'template', $data );
 	}
 	public function createuser()
 	{
@@ -38,7 +38,7 @@ class Site extends CI_Controller
 //        $data['category']=$this->category_model->getcategorydropdown();
 		$data[ 'page' ] = 'createuser';
 		$data[ 'title' ] = 'Create User';
-		$this->load->view( 'template', $data );	
+		$this->load->view( 'template', $data );
 	}
 	function createusersubmit()
 	{
@@ -53,7 +53,7 @@ class Site extends CI_Controller
 		$this->form_validation->set_rules('socialid','Socialid','trim');
 		$this->form_validation->set_rules('logintype','logintype','trim');
 		$this->form_validation->set_rules('json','json','trim');
-		if($this->form_validation->run() == FALSE)	
+		if($this->form_validation->run() == FALSE)
 		{
 			$data['alerterror'] = validation_errors();
 			$data['accesslevel']=$this->user_model->getaccesslevels();
@@ -62,7 +62,7 @@ class Site extends CI_Controller
             $data['category']=$this->category_model->getcategorydropdown();
             $data[ 'page' ] = 'createuser';
             $data[ 'title' ] = 'Create User';
-            $this->load->view( 'template', $data );	
+            $this->load->view( 'template', $data );
 		}
 		else
 		{
@@ -76,7 +76,7 @@ class Site extends CI_Controller
             $json=$this->input->post('json');
             $points=$this->input->post('points');
 //            $category=$this->input->post('category');
-            
+
             $config['upload_path'] = './uploads/';
 			$config['allowed_types'] = 'gif|jpg|png|jpeg';
 			$this->load->library('upload', $config);
@@ -86,7 +86,7 @@ class Site extends CI_Controller
 			{
 				$uploaddata = $this->upload->data();
 				$image=$uploaddata['file_name'];
-                
+
                 $config_r['source_image']   = './uploads/' . $uploaddata['file_name'];
                 $config_r['maintain_ratio'] = TRUE;
                 $config_t['create_thumb'] = FALSE;///add this
@@ -95,13 +95,13 @@ class Site extends CI_Controller
                 $config_r['quality']    = 100;
                 //end of configs
 
-                $this->load->library('image_lib', $config_r); 
+                $this->load->library('image_lib', $config_r);
                 $this->image_lib->initialize($config_r);
                 if(!$this->image_lib->resize())
                 {
                     echo "Failed." . $this->image_lib->display_errors();
                     //return false;
-                }  
+                }
                 else
                 {
                     //print_r($this->image_lib->dest_image);
@@ -109,9 +109,9 @@ class Site extends CI_Controller
                     $image=$this->image_lib->dest_image;
                     //return false;
                 }
-                
+
 			}
-            
+
 			if($this->user_model->create($name,$email,$password,$accesslevel,$status,$socialid,$logintype,$image,$json,$points)==0)
 			$data['alerterror']="New user could not be created.";
 			else
@@ -126,67 +126,67 @@ class Site extends CI_Controller
 		$this->checkaccess($access);
 		$data['page']='viewusers';
         $data['base_url'] = site_url("site/viewusersjson");
-        
+
 		$data['title']='View Users';
 		$this->load->view('template',$data);
-	} 
+	}
     function viewusersjson()
 	{
 		$access = array("1");
 		$this->checkaccess($access);
-        
-        
+
+
         $elements=array();
         $elements[0]=new stdClass();
         $elements[0]->field="`user`.`id`";
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
-        
+
+
         $elements[1]=new stdClass();
         $elements[1]->field="`user`.`name`";
         $elements[1]->sort="1";
         $elements[1]->header="Name";
         $elements[1]->alias="name";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`user`.`email`";
         $elements[2]->sort="1";
         $elements[2]->header="Email";
         $elements[2]->alias="email";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`user`.`socialid`";
         $elements[3]->sort="1";
         $elements[3]->header="SocialId";
         $elements[3]->alias="socialid";
-        
+
         $elements[4]=new stdClass();
         $elements[4]->field="`logintype`.`name`";
         $elements[4]->sort="1";
         $elements[4]->header="Logintype";
         $elements[4]->alias="logintype";
-        
+
         $elements[5]=new stdClass();
         $elements[5]->field="`user`.`json`";
         $elements[5]->sort="1";
         $elements[5]->header="Json";
         $elements[5]->alias="json";
-       
+
         $elements[6]=new stdClass();
         $elements[6]->field="`accesslevel`.`name`";
         $elements[6]->sort="1";
         $elements[6]->header="Accesslevel";
         $elements[6]->alias="accesslevelname";
-       
+
         $elements[7]=new stdClass();
         $elements[7]->field="`statuses`.`name`";
         $elements[7]->sort="1";
         $elements[7]->header="Status";
         $elements[7]->alias="status";
-       
-        
+
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -196,19 +196,19 @@ class Site extends CI_Controller
         {
             $maxrow=20;
         }
-        
+
         if($orderby=="")
         {
             $orderby="id";
             $orderorder="ASC";
         }
-       
+
         $data["message"]=$this->chintantable->query($pageno,$maxrow,$orderby,$orderorder,$search,$elements,"FROM `user` LEFT OUTER JOIN `logintype` ON `logintype`.`id`=`user`.`logintype` LEFT OUTER JOIN `accesslevel` ON `accesslevel`.`id`=`user`.`accesslevel` LEFT OUTER JOIN `statuses` ON `statuses`.`id`=`user`.`status`");
-        
+
 		$this->load->view("json",$data);
-	} 
-    
-    
+	}
+
+
 	function edituser()
 	{
 		$access = array("1");
@@ -226,7 +226,7 @@ class Site extends CI_Controller
 	{
 		$access = array("1");
 		$this->checkaccess($access);
-		
+
 		$this->form_validation->set_rules('name','Name','trim|required|max_length[30]');
 		$this->form_validation->set_rules('email','Email','trim|required|valid_email');
 		$this->form_validation->set_rules('password','Password','trim|min_length[6]|max_length[30]');
@@ -236,7 +236,7 @@ class Site extends CI_Controller
 		$this->form_validation->set_rules('socialid','Socialid','trim');
 		$this->form_validation->set_rules('logintype','logintype','trim');
 		$this->form_validation->set_rules('json','json','trim');
-		if($this->form_validation->run() == FALSE)	
+		if($this->form_validation->run() == FALSE)
 		{
 			$data['alerterror'] = validation_errors();
 			$data[ 'status' ] =$this->user_model->getstatusdropdown();
@@ -250,7 +250,7 @@ class Site extends CI_Controller
 		}
 		else
 		{
-            
+
             $id=$this->input->get_post('id');
             $name=$this->input->get_post('name');
             $email=$this->input->get_post('email');
@@ -262,7 +262,7 @@ class Site extends CI_Controller
             $json=$this->input->get_post('json');
             $points=$this->input->get_post('points');
 //            $category=$this->input->get_post('category');
-            
+
             $config['upload_path'] = './uploads/';
 			$config['allowed_types'] = 'gif|jpg|png|jpeg';
 			$this->load->library('upload', $config);
@@ -272,7 +272,7 @@ class Site extends CI_Controller
 			{
 				$uploaddata = $this->upload->data();
 				$image=$uploaddata['file_name'];
-                
+
                 $config_r['source_image']   = './uploads/' . $uploaddata['file_name'];
                 $config_r['maintain_ratio'] = TRUE;
                 $config_t['create_thumb'] = FALSE;///add this
@@ -281,13 +281,13 @@ class Site extends CI_Controller
                 $config_r['quality']    = 100;
                 //end of configs
 
-                $this->load->library('image_lib', $config_r); 
+                $this->load->library('image_lib', $config_r);
                 $this->image_lib->initialize($config_r);
                 if(!$this->image_lib->resize())
                 {
                     echo "Failed." . $this->image_lib->display_errors();
                     //return false;
-                }  
+                }
                 else
                 {
                     //print_r($this->image_lib->dest_image);
@@ -295,28 +295,28 @@ class Site extends CI_Controller
                     $image=$this->image_lib->dest_image;
                     //return false;
                 }
-                
+
 			}
-            
+
             if($image=="")
             {
             $image=$this->user_model->getuserimagebyid($id);
                // print_r($image);
                 $image=$image->image;
             }
-            
+
 			if($this->user_model->edit($id,$name,$email,$password,$accesslevel,$status,$socialid,$logintype,$image,$json,$points)==0)
 			$data['alerterror']="User Editing was unsuccesful";
 			else
 			$data['alertsuccess']="User edited Successfully.";
-			
+
 			$data['redirect']="site/viewusers";
 			//$data['other']="template=$template";
 			$this->load->view("redirect",$data);
-			
+
 		}
 	}
-	
+
 	function deleteuser()
 	{
 		$access = array("1");
@@ -339,9 +339,9 @@ class Site extends CI_Controller
         $data['other']="template=$template";
         $this->load->view("redirect",$data);
 	}
-    
-    
-    
+
+
+
     public function viewsociallogin()
     {
         $access=array("1");
@@ -354,19 +354,19 @@ class Site extends CI_Controller
     function viewsocialloginjson()
     {
         $elements=array();
-        
+
         $elements[0]=new stdClass();
         $elements[0]->field="`predicto_sociallogin`.`id`";
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_sociallogin`.`name`";
         $elements[1]->sort="1";
         $elements[1]->header="Name";
         $elements[1]->alias="name";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -393,7 +393,7 @@ class Site extends CI_Controller
         $data["title"]="Create sociallogin";
         $this->load->view("template",$data);
     }
-    public function createsocialloginsubmit() 
+    public function createsocialloginsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -476,31 +476,31 @@ class Site extends CI_Controller
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_predictiongroup`.`name`";
         $elements[1]->sort="1";
         $elements[1]->header="Name";
         $elements[1]->alias="name";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_predictiongroup`.`order`";
         $elements[2]->sort="1";
         $elements[2]->header="Order";
         $elements[2]->alias="order";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_predictiongroup`.`status`";
         $elements[3]->sort="1";
         $elements[3]->header="Status";
         $elements[3]->alias="status";
-        
+
         $elements[4]=new stdClass();
         $elements[4]->field="`predicto_predictiongroup`.`endtime`";
         $elements[4]->sort="1";
         $elements[4]->header="End Time";
         $elements[4]->alias="endtime";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -528,7 +528,7 @@ class Site extends CI_Controller
         $data['status']=$this->predictiongroup_model->getpredictiongroupstatusdropdown();
         $this->load->view("template",$data);
     }
-    public function createpredictiongroupsubmit() 
+    public function createpredictiongroupsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -626,31 +626,31 @@ class Site extends CI_Controller
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_teamgroup`.`name`";
         $elements[1]->sort="1";
         $elements[1]->header="Name";
         $elements[1]->alias="name";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_teamgroup`.`predictiongroup`";
         $elements[2]->sort="1";
         $elements[2]->header="Prediction Group";
         $elements[2]->alias="predictiongroupid";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_teamgroup`.`order`";
         $elements[3]->sort="1";
         $elements[3]->header="Order";
         $elements[3]->alias="order";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_predictiongroup`.`name`";
         $elements[2]->sort="1";
         $elements[2]->header="Prediction Group";
         $elements[2]->alias="predictiongroup";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -678,7 +678,7 @@ class Site extends CI_Controller
         $data['predictiongroup']=$this->predictiongroup_model->getpredictiongroupdropdown();
         $this->load->view("template",$data);
     }
-    public function createteamgroupsubmit() 
+    public function createteamgroupsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -772,55 +772,55 @@ class Site extends CI_Controller
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_prediction`.`predictiongroup`";
         $elements[1]->sort="1";
         $elements[1]->header="Prediction Group";
         $elements[1]->alias="predictiongroupid";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_prediction`.`name`";
         $elements[2]->sort="1";
         $elements[2]->header="Name";
         $elements[2]->alias="name";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_prediction`.`status`";
         $elements[3]->sort="1";
         $elements[3]->header="Status";
         $elements[3]->alias="status";
-        
+
         $elements[4]=new stdClass();
         $elements[4]->field="`predicto_prediction`.`predictionteam`";
         $elements[4]->sort="1";
         $elements[4]->header="Winner";
         $elements[4]->alias="predictionteamid";
-        
+
         $elements[5]=new stdClass();
         $elements[5]->field="`predicto_prediction`.`endtime`";
         $elements[5]->sort="1";
         $elements[5]->header="End Time";
         $elements[5]->alias="endtime";
-        
+
         $elements[6]=new stdClass();
         $elements[6]->field="`predicto_prediction`.`order`";
         $elements[6]->sort="1";
         $elements[6]->header="Order";
         $elements[6]->alias="order";
-        
+
         $elements[7]=new stdClass();
         $elements[7]->field="`predicto_predictiongroup`.`name`";
         $elements[7]->sort="1";
         $elements[7]->header="Prediction Group";
         $elements[7]->alias="predictiongroup";
-        
+
         $elements[8]=new stdClass();
         $elements[8]->field="`predicto_teamgroup`.`name`";
         $elements[8]->sort="1";
         $elements[8]->header="Winner";
         $elements[8]->alias="predictionteam";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -835,7 +835,7 @@ class Site extends CI_Controller
             $orderby="id";
             $orderorder="ASC";
         }
-        $data["message"]=$this->chintantable->query($pageno,$maxrow,$orderby,$orderorder,$search,$elements,"FROM `predicto_prediction` LEFT OUTER JOIN `predicto_predictiongroup` ON `predicto_prediction`.`predictiongroup`=`predicto_predictiongroup`.`id` LEFT OUTER JOIN `predicto_predictionteam` ON `predicto_prediction`.`predictionteam`=`predicto_predictionteam`.`id` 
+        $data["message"]=$this->chintantable->query($pageno,$maxrow,$orderby,$orderorder,$search,$elements,"FROM `predicto_prediction` LEFT OUTER JOIN `predicto_predictiongroup` ON `predicto_prediction`.`predictiongroup`=`predicto_predictiongroup`.`id` LEFT OUTER JOIN `predicto_predictionteam` ON `predicto_prediction`.`predictionteam`=`predicto_predictionteam`.`id`
 LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`predicto_teamgroup`.`id`");
         $this->load->view("json",$data);
     }
@@ -851,7 +851,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data['predictionteam']=$this->predictionteam_model->getpredictionteamdropdown();
         $this->load->view("template",$data);
     }
-    public function createpredictionsubmit() 
+    public function createpredictionsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -963,37 +963,37 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_predictionteam`.`prediction`";
         $elements[1]->sort="1";
         $elements[1]->header="Prediction";
         $elements[1]->alias="predictionid";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_predictionteam`.`teamgroup`";
         $elements[2]->sort="1";
         $elements[2]->header="Team Group";
         $elements[2]->alias="teamgroupid";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_predictionteam`.`order`";
         $elements[3]->sort="1";
         $elements[3]->header="Order";
         $elements[3]->alias="order";
-        
+
         $elements[4]=new stdClass();
         $elements[4]->field="`predicto_prediction`.`name`";
         $elements[4]->sort="1";
         $elements[4]->header="Prediction";
         $elements[4]->alias="prediction";
-        
+
         $elements[5]=new stdClass();
         $elements[5]->field="`predicto_teamgroup`.`name`";
         $elements[5]->sort="1";
         $elements[5]->header="Team Group";
         $elements[5]->alias="teamgroup";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -1022,7 +1022,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data['teamgroup']=$this->teamgroup_model->getteamgroupdropdown();
         $this->load->view("template",$data);
     }
-    public function createpredictionteamsubmit() 
+    public function createpredictionteamsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -1119,43 +1119,43 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_userprediction`.`user`";
         $elements[1]->sort="1";
         $elements[1]->header="User";
         $elements[1]->alias="userid";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_userprediction`.`teamgroup`";
         $elements[2]->sort="1";
         $elements[2]->header="Team Group";
         $elements[2]->alias="teamgroupid";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_userprediction`.`prediction`";
         $elements[3]->sort="1";
         $elements[3]->header="Prediction";
         $elements[3]->alias="predictionid";
-        
+
         $elements[4]=new stdClass();
         $elements[4]->field="`user`.`name`";
         $elements[4]->sort="1";
         $elements[4]->header="User";
         $elements[4]->alias="user";
-        
+
         $elements[5]=new stdClass();
         $elements[5]->field="`predicto_teamgroup`.`name`";
         $elements[5]->sort="1";
         $elements[5]->header="Team Group";
         $elements[5]->alias="teamgroup";
-        
+
         $elements[6]=new stdClass();
         $elements[6]->field="`predicto_prediction`.`name`";
         $elements[6]->sort="1";
         $elements[6]->header="Prediction";
         $elements[6]->alias="prediction";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -1185,7 +1185,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data['prediction']=$this->prediction_model->getpredictiondropdown();
         $this->load->view("template",$data);
     }
-    public function createuserpredictionsubmit() 
+    public function createuserpredictionsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -1268,8 +1268,8 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data["redirect"]="site/viewuserprediction";
         $this->load->view("redirect",$data);
     }
-    
-    
+
+
     public function viewpredictionhash()
     {
         $access=array("1");
@@ -1287,19 +1287,19 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_predictionhash`.`prediction`";
         $elements[1]->sort="1";
         $elements[1]->header="Prediction";
         $elements[1]->alias="prediction";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_predictionhash`.`hashtag`";
         $elements[2]->sort="1";
         $elements[2]->header="Hash Tag";
         $elements[2]->alias="hashtag";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -1327,7 +1327,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data['prediction']=$this->prediction_model->getpredictiondropdown();
         $this->load->view("template",$data);
     }
-    public function createpredictionhashsubmit() 
+    public function createpredictionhashsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -1417,43 +1417,43 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_usershare`.`user`";
         $elements[1]->sort="1";
         $elements[1]->header="User";
         $elements[1]->alias="userid";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_usershare`.`sharecontent`";
         $elements[2]->sort="1";
         $elements[2]->header="Share Content";
         $elements[2]->alias="sharecontent";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_usershare`.`total`";
         $elements[3]->sort="1";
         $elements[3]->header="Total";
         $elements[3]->alias="total";
-        
+
         $elements[4]=new stdClass();
         $elements[4]->field="`predicto_usershare`.`prediction`";
         $elements[4]->sort="1";
         $elements[4]->header="Prediction";
         $elements[4]->alias="predictionid";
-        
+
         $elements[5]=new stdClass();
         $elements[5]->field="`predicto_prediction`.`name`";
         $elements[5]->sort="1";
         $elements[5]->header="Prediction";
         $elements[5]->alias="prediction";
-        
+
         $elements[6]=new stdClass();
         $elements[6]->field="`user`.`name`";
         $elements[6]->sort="1";
         $elements[6]->header="User";
         $elements[6]->alias="user";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -1483,7 +1483,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data['predictionhash']=$this->predictionhash_model->getpredictionhashdropdown();
         $this->load->view("template",$data);
     }
-    public function createusersharesubmit() 
+    public function createusersharesubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -1589,31 +1589,31 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_usersharehash`.`usershare`";
         $elements[1]->sort="1";
         $elements[1]->header="User Share";
         $elements[1]->alias="usershare";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_usersharehash`.`predictionhash`";
         $elements[2]->sort="1";
         $elements[2]->header="Prediction Hash";
         $elements[2]->alias="predictionhash";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_usershare`.`sharecontent`";
         $elements[3]->sort="1";
         $elements[3]->header="User Share";
         $elements[3]->alias="usershare";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_usersharehash`.`predictionhash`";
         $elements[2]->sort="1";
         $elements[2]->header="Prediction Hash";
         $elements[2]->alias="predictionhash";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -1642,7 +1642,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data['usershare']=$this->usershare_model->getusersharedropdown();
         $this->load->view("template",$data);
     }
-    public function createusersharehashsubmit() 
+    public function createusersharehashsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
@@ -1735,37 +1735,37 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $elements[0]->sort="1";
         $elements[0]->header="ID";
         $elements[0]->alias="id";
-        
+
         $elements[1]=new stdClass();
         $elements[1]->field="`predicto_userpointlog`.`point`";
         $elements[1]->sort="1";
         $elements[1]->header="Point";
         $elements[1]->alias="point";
-        
+
         $elements[2]=new stdClass();
         $elements[2]->field="`predicto_userpointlog`.`for`";
         $elements[2]->sort="1";
         $elements[2]->header="For";
         $elements[2]->alias="for";
-        
+
         $elements[3]=new stdClass();
         $elements[3]->field="`predicto_userpointlog`.`prediction`";
         $elements[3]->sort="1";
         $elements[3]->header="Prediction";
         $elements[3]->alias="predictionid";
-        
+
         $elements[4]=new stdClass();
         $elements[4]->field="`predicto_userpointlog`.`shareid`";
         $elements[4]->sort="1";
         $elements[4]->header="share ID";
         $elements[4]->alias="shareid";
-        
+
         $elements[5]=new stdClass();
         $elements[5]->field="`predicto_prediction`.`name`";
         $elements[5]->sort="1";
         $elements[5]->header="Prediction";
         $elements[5]->alias="prediction";
-        
+
         $search=$this->input->get_post("search");
         $pageno=$this->input->get_post("pageno");
         $orderby=$this->input->get_post("orderby");
@@ -1794,7 +1794,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data['for']=$this->userpointlog_model->getfordropdown();
         $this->load->view("template",$data);
     }
-    public function createuserpointlogsubmit() 
+    public function createuserpointlogsubmit()
     {
         $access=array("1");
         $this->checkaccess($access);
