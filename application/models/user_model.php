@@ -469,7 +469,7 @@ class User_model extends CI_Model
 						break;
 					}
 
-            $query2=$this->db->query("INSERT INTO `predicto`.`user` (`id`, `name`, `password`, `email`, `accesslevel`, `timestamp`, `status`, `image`, `username`, `socialid`, `logintype`, `json`) VALUES (NULL, '$user_profile->displayName', '', '$user_profile->email', '2', CURRENT_TIMESTAMP,'1','$user_profile->photoURL','$user_profile->firstName','$user_profile->identifier', '$providerid', '')");
+            $query2=$this->db->query("INSERT INTO `user` (`id`, `name`, `password`, `email`, `accesslevel`, `timestamp`, `status`, `image`, `username`, `socialid`, `logintype`, `json`) VALUES (NULL, '$user_profile->displayName', '', '$user_profile->email', '2', CURRENT_TIMESTAMP,'1','$user_profile->photoURL','$user_profile->firstName','$user_profile->identifier', '$providerid', '')");
             $id=$this->db->insert_id();
             $newdata = array(
                 'email'     => $user_profile->email,
