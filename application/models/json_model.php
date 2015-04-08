@@ -26,7 +26,7 @@ class Json_model extends CI_Model {
     function getpredictions() {
         $userid = $this->session->userdata("id");
         $prediction = $this->db->query("SELECT `predicto_prediction`.`id`,`predicto_prediction`.`name`,`predicto_prediction`.`status`,
-`predicto_prediction`.`predictionteam` as `winner`,UNIX_TIMESTAMP(`predicto_prediction`.`starttime`)*1000 as `starttime`,UNIX_TIMESTAMP(`predicto_prediction`.`endtime`)*1000 as `endtime`,
+`predicto_prediction`.`predictionteam` as `winner`,FLOOR(UNIX_TIMESTAMP(`predicto_prediction`.`starttime`)*1000) as `starttime`,FLOOR(UNIX_TIMESTAMP(`predicto_prediction`.`endtime`)*1000) as `endtime`,
 `predicto_prediction`.`venue`,`team11`.`id` as `team1id`,`team22`.`id` as `team2id`,`team11`.`name` as `team1name`,`team22`.`name` as `team2name`
  FROM `predicto_prediction`
 
