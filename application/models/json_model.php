@@ -101,9 +101,9 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
             $hash = $query2->result();
             $hashstring = "";
             foreach ($hash as $hashone) {
-                $hashstring.= "$hashone->hashtag ";
+                $hashstring.= "$hashone->hashtag OR ";
             }
-            $hashstring = substr($hashstring, 0, -1);
+            $hashstring = substr($hashstring, 0, -4);
             $this->load->library('twitteroauth');
             $this->config->load('twitter');
             $this->connection = $this->twitteroauth->create($this->config->item('twitter_consumer_token'), $this->config->item('twitter_consumer_secret'), $this->config->item('twitter_access_token'), $this->config->item('twitter_access_secret'));
