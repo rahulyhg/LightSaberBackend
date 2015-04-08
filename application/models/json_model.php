@@ -58,7 +58,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         return true;
     }
     function getpredictionforuser($predict) {
-      $userid = $this->session->userdata("id");
+        $userid = $this->session->userdata("id");
         $prediction = $this->db->query("SELECT `predicto_prediction`.`id`,`predicto_prediction`.`name`,`predicto_prediction`.`status`,
 `predicto_prediction`.`predictionteam` as `winner`,`predicto_prediction`.`starttime`,`predicto_prediction`.`endtime`,
 `predicto_prediction`.`venue`,`team11`.`id` as `team1id`,`team22`.`id` as `team2id`,`team11`.`name` as `team1name`,`team22`.`name` as `team2name`
@@ -85,16 +85,17 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         $hash = new stdClass();
         if ($querynum2 != 0) {
             $hash = $query2->result();
-            $this->load->library('HybridAuthLib');
-            $twitter = $this->hybridauthlib->authenticate("Twitter");
-            $hashstring="";
-            foreach($hash as $hashone)
-            {
-              $hashstring.="$hashone->hashtag ";
+            $hashstring = "";
+            foreach ($hash as $hashone) {
+                $hashstring.= "$hashone->hashtag ";
             }
-            $hashstring= substr($hashstring,0,-1);
-            $data = $twitter->api()->get("h");
-            print_r($data);
+            $hashstring = substr($hashstring, 0, -1);
+            $this->load->library('twitteroauth');
+            $this->config->load('twitter');
+            $this->connection = $this->twitteroauth->create($this->config->item('twitter_consumer_token'), $this->config->item('twitter_consumer_secret'), $this->config->item('twitter_access_token'), $this->config->item('twitter_access_secret'));
+            $hashstring=urlencode($hashstring);
+            $data = $this->twitteroauth->get('search/tweets.json?q=' . $hashstring."&count=4");
+            $prediction->tweets=$data;
         }
         return $prediction;
     }
