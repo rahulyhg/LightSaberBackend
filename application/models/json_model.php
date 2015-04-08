@@ -38,10 +38,16 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
 ")->result();
         foreach ($prediction as $predict) {
             $predictioncount = $this->db->query("SELECT COUNT(`id`) as `count` FROM `predicto_userprediction` WHERE `prediction`='$predict->id' GROUP BY `teamgroup`")->result();
-            if (($predictioncount[0]->count + $predictioncount[1]->count) > 0) {
-                $predict->team1percent = $predictioncount[0]->count / ($predictioncount[0]->count + $predictioncount[1]->count) * 100;
+            if (sizeof($predictioncount) == 1) {
+                if ($predictioncount[0]->teamgroup == $predict->team1id) {
+                    $prediction->team1percent = 100;
+                } else {
+                    $prediction->team1percent = 0;
+                }
+            } else if (sizeof($predictioncount) != 0) {
+                $prediction->team1percent = $predictioncount[0]->count / ($predictioncount[0]->count + $predictioncount[1]->count) * 100;
             } else {
-                $predict->team1percent = - 1;
+                $prediction->team1percent = - 1;
             }
         }
         return $prediction;
@@ -67,8 +73,14 @@ INNER  JOIN `predicto_predictionteam` as `team1` ON `predicto_prediction`.`id`=`
 INNER  JOIN `predicto_predictionteam` as `team2` ON `predicto_prediction`.`id`=`team2`.`prediction` AND `team2`.`order`=2
 INNER  JOIN `predicto_teamgroup` as `team11` ON `team1`.`teamgroup`=`team11`.`id`
 INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id` ")->row();
-        $predictioncount = $this->db->query("SELECT COUNT(`id`) as `count` FROM `predicto_userprediction` WHERE `prediction`='$prediction->id' GROUP BY `teamgroup`")->result();
-        if (($predictioncount[0]->count + $predictioncount[1]->count) > 0) {
+        $predictioncount = $this->db->query("SELECT COUNT(`id`),`teamgroup` as `count` FROM `predicto_userprediction` WHERE `prediction`='$prediction->id' GROUP BY `teamgroup`")->result();
+        if (sizeof($predictioncount) == 1) {
+            if ($predictioncount[0]->teamgroup == $prediction->team1id) {
+                $prediction->team1percent = 100;
+            } else {
+                $prediction->team1percent = 0;
+            }
+        } else if (sizeof($predictioncount) != 0) {
             $prediction->team1percent = $predictioncount[0]->count / ($predictioncount[0]->count + $predictioncount[1]->count) * 100;
         } else {
             $prediction->team1percent = - 1;
@@ -93,9 +105,9 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
             $this->load->library('twitteroauth');
             $this->config->load('twitter');
             $this->connection = $this->twitteroauth->create($this->config->item('twitter_consumer_token'), $this->config->item('twitter_consumer_secret'), $this->config->item('twitter_access_token'), $this->config->item('twitter_access_secret'));
-            $hashstring=urlencode($hashstring);
-            $data = $this->twitteroauth->get('search/tweets.json?q=' . $hashstring."&count=20");
-            $prediction->tweets=$data;
+            $hashstring = urlencode($hashstring);
+            $data = $this->twitteroauth->get('search/tweets.json?q=' . $hashstring . "&count=20");
+            $prediction->tweets = $data;
         }
         return $prediction;
     }
