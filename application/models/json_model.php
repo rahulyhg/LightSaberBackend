@@ -49,6 +49,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
             } else {
                 $predict->team1percent = - 1;
             }
+            $predict->team1percent=intval($predict->team1percent);
         }
         return $prediction;
     }
@@ -85,6 +86,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         } else {
             $prediction->team1percent = - 1;
         }
+        $prediction->team1percent=intval($prediction->team1percent);
         $userid = $this->session->userdata("id");
         $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$predict'");
         $querynum = $query->num_rows();
