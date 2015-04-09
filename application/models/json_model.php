@@ -45,7 +45,22 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
                     $predict->team1percent = 0;
                 }
             } else if (sizeof($predictioncount) > 1) {
-                $predict->team1percent = $predictioncount[0]->count / ($predictioncount[0]->count + $predictioncount[1]->count) * 100;
+                $firstone=0;
+                $secondtwo=0;
+                foreach($predictioncount as $key => $predict2)
+                {
+                    if($predict2->teamgroup==$predict->team1id)
+                    {
+                        $firstone=$key;
+                    }
+                    if($predict2->teamgroup==$predict->team2id)
+                    {
+                        $secondtwo=$key;
+                    }
+                    
+                }
+                
+                $predict->team1percent = $predictioncount[$firstone]->count / ($predictioncount[$firstone]->count + $predictioncount[$secondtwo]->count) * 100;
             } else {
                 $predict->team1percent = - 1;
             }
@@ -82,7 +97,24 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
                 $prediction->team1percent = 0;
             }
         } else if (sizeof($predictioncount) > 1) {
-            $prediction->team1percent = $predictioncount[0]->count / ($predictioncount[0]->count + $predictioncount[1]->count) * 100;
+            
+            $firstone=0;
+                $secondtwo=0;
+                foreach($predictioncount as $key => $predict2)
+                {
+                    if($predict2->teamgroup==$prediction->team1id)
+                    {
+                        $firstone=$key;
+                    }
+                    if($predict2->teamgroup==$prediction->team2id)
+                    {
+                        $secondtwo=$key;
+                    }
+                    
+                }
+                
+                $prediction->team1percent = $predictioncount[$firstone]->count / ($predictioncount[$firstone]->count + $predictioncount[$secondtwo]->count) * 100;
+            
         } else {
             $prediction->team1percent = - 1;
         }
