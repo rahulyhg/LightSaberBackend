@@ -37,10 +37,22 @@
                                 <?php echo form_dropdown( "predictionteam",$predictionteam,set_value( 'predictionteam'), "class='chzn-select form-control'");?>
                             </div>
                         </div>
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label" for="normal-field">Start Time</label>
+                            <div class="col-sm-4">
+                                <input type="datetime-local" id="normal-field" class="form-control" name="starttime" value='<?php echo set_value(' starttime ');?>'>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label" for="normal-field">End Time</label>
                             <div class="col-sm-4">
                                 <input type="text" id="normal-field" class="form-control" name="endtime" value='<?php echo set_value(' endtime ');?>'>
+                            </div>
+                        </div>
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label" for="normal-field">Venue</label>
+                            <div class="col-sm-4">
+                                <input type="text" id="normal-field" class="form-control" name="venue" value='<?php echo set_value(' venue ');?>'>
                             </div>
                         </div>
                         <div class="form-group">

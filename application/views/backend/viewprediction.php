@@ -19,7 +19,9 @@
                             <th data-field="name">Name</th>
                             <th data-field="status">Status</th>
                             <th data-field="predictionteam">Winner</th>
+                            <th data-field="starttime">Start Time</th>
                             <th data-field="endtime">End Time</th>
+                            <th data-field="venue">Venue</th>
                             <th data-field="order">Order</th>
                             <th data-field="Action">Action</th>
                         </tr>
@@ -29,7 +31,7 @@
                 </table>
                 <?php $this->chintantable->createpagination();?>
             </div>
-        </section>
+        </section>       
         <script>
             function drawtable(resultrow) {
                 if(resultrow.status==0)
@@ -40,7 +42,7 @@
                 {
                     resultrow.status="Enable";
                 }
-                return "<tr><td>" + resultrow.id + "</td><td>" + resultrow.predictiongroup + "</td><td>" + resultrow.name + "</td><td>" + resultrow.status + "</td><td>" + resultrow.predictionteam + "</td><td>" + resultrow.endtime + "</td><td>" + resultrow.order + "</td><td><a class='btn btn-primary btn-xs' href='<?php echo site_url('site/editprediction?id=');?>" + resultrow.id + "'><i class='icon-pencil'></i></a><a class='btn btn-danger btn-xs' href='<?php echo site_url('site/deleteprediction?id='); ?>" + resultrow.id + "'><i class='icon-trash '></i></a></td></tr>";
+                return "<tr><td>" + resultrow.id + "</td><td>" + resultrow.predictiongroup + "</td><td>" + resultrow.name + "</td><td>" + resultrow.status + "</td><td>" + resultrow.predictionteam + "</td><td>" + resultrow.starttime + "</td><td>" + resultrow.endtime + "</td><td>" + resultrow.venue + "</td><td>" + resultrow.order + "</td><td><a class='btn btn-primary btn-xs' href='<?php echo site_url('site/editprediction?id=');?>" + resultrow.id + "'><i class='icon-pencil'></i></a><a class='btn btn-danger btn-xs' href='<?php echo site_url('site/deleteprediction?id='); ?>" + resultrow.id + "'><i class='icon-trash'></i></a></td></tr>";
             }
             generatejquery("<?php echo $base_url;?>");
         </script>
