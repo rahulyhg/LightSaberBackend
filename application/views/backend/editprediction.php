@@ -26,9 +26,7 @@
             <div class=" form-group">
                 <label class="col-sm-2 control-label" for="normal-field">Winner</label>
                 <div class="col-sm-4">
-                    <?php echo form_dropdown( "predictionteam",$predictionteam,set_value( 'predictionteam',$before->predictionteam),"class='chzn-select form-
-
-control'");?>
+                    <?php echo form_dropdown( "predictionteam",$predictionteam,set_value( 'predictionteam',$before->predictionteam),"class='chzn-select form-control'");?>
                 </div>
             </div>
            

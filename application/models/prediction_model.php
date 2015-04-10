@@ -5,9 +5,7 @@ class prediction_model extends CI_Model
 {
     public function create($predictiongroup,$name,$status,$predictionteam,$starttime,$endtime,$venue,$order)
     {
-        $data=array("predictiongroup" => $predictiongroup,"name" => $name,"status" => $status,"predictionteam" => $predictionteam,"starttime" => $starttime,"endtime" 
-
-=> $endtime,"venue" => $venue,"order" => $order);
+        $data=array("predictiongroup" => $predictiongroup,"name" => $name,"status" => $status,"predictionteam" => $predictionteam,"starttime" => $starttime,"endtime" => $endtime,"venue" => $venue,"order" => $order);
         $query=$this->db->insert( "predicto_prediction", $data );
         $id=$this->db->insert_id();
         if(!$query)
@@ -69,6 +67,17 @@ class prediction_model extends CI_Model
 			);
 		return $status;
 	}
+	 public function winnerchanged($prediction, $team) {
+        if ($team != "") {
+            $this->db->query("DELETE FROM `predicto_userpointlog` WHERE `prediction` = '$prediction'");
+            $this->db->query("INSERT INTO `predicto_userpointlog` (`id`, `point`, `for`, `prediction`, `shareid`, `user`) SELECT NULL,200,1,$prediction,0,`user` FROM `predicto_userprediction` WHERE `prediction`='$prediction' AND `teamgroup`='$team'");
+            $this->db->query("INSERT INTO `predicto_userpointlog` (`id`, `point`, `for`, `prediction`, `shareid`, `user`) SELECT NULL,50,1,$prediction,0,`user` FROM `predicto_userprediction` WHERE `prediction`='$prediction' AND `teamgroup`<>'$team'");
+            $this->db->query("UPDATE `user` ,(SELECT SUM(`point`) as `points`,`user` as `user` FROM `predicto_userpointlog` GROUP BY `user`) as `userpoints`  SET `user`.`points`=`userpoints`.`points` WHERE `user`.`id`=`userpoints`.`user`");
+            return true;
+        } else {
+            return false;
+        }
+    }
 	
 }
 ?>

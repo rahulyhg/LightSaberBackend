@@ -669,6 +669,16 @@ class Site extends CI_Controller {
         $elements[8]->sort = "1";
         $elements[8]->header = "Winner";
         $elements[8]->alias = "predictionteam";
+		$elements[9]=new stdClass();
+        $elements[9]->field="`predicto_prediction`.`starttime`";
+        $elements[9]->sort="1";
+        $elements[9]->header="Start Time";
+        $elements[9]->alias="starttime";
+        $elements[10]=new stdClass();
+        $elements[10]->field="`predicto_prediction`.`venue`";
+        $elements[10]->sort="1";
+        $elements[10]->header="Venue";
+        $elements[10]->alias="venue";
         $search = $this->input->get_post("search");
         $pageno = $this->input->get_post("pageno");
         $orderby = $this->input->get_post("orderby");
@@ -692,7 +702,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data["title"] = "Create prediction";
         $data['status'] = $this->prediction_model->getpredictionstatusdropdown();
         $data['predictiongroup'] = $this->predictiongroup_model->getpredictiongroupdropdown();
-        $data['predictionteam'] = $this->teamgroup_model->getteamgroupdropdown();
+        $data['predictionteam'] = $this->predictionteam_model->getpredictionteamdropdown();
         $this->load->view("template", $data);
     }
     public function createpredictionsubmit() {
@@ -702,7 +712,9 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $this->form_validation->set_rules("name", "Name", "trim");
         $this->form_validation->set_rules("status", "Status", "trim");
         $this->form_validation->set_rules("predictionteam", "Winner", "trim");
-        $this->form_validation->set_rules("endtime", "End Time", "trim");
+        $this->form_validation->set_rules("starttime","Start Time","trim");
+        $this->form_validation->set_rules("endtime","End Time","trim");
+        $this->form_validation->set_rules("venue","Venue","trim");
         $this->form_validation->set_rules("order", "Order", "trim");
         if ($this->form_validation->run() == FALSE) {
             $data["alerterror"] = validation_errors();
@@ -717,9 +729,11 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
             $name = $this->input->get_post("name");
             $status = $this->input->get_post("status");
             $predictionteam = $this->input->get_post("predictionteam");
-            $endtime = $this->input->get_post("endtime");
+            $starttime=$this->input->get_post("starttime");
+            $endtime=$this->input->get_post("endtime");
+            $venue=$this->input->get_post("venue");
             $order = $this->input->get_post("order");
-						$predictionid=$this->prediction_model->create($predictiongroup, $name, $status, $predictionteam, $endtime, $order);
+						$predictionid=$this->prediction_model->create($predictiongroup, $name, $status, $predictionteam, $starttime, $endtime, $venue, $order);
             if ($predictionid == 0) {
                 $data["alerterror"] = "New prediction could not be created.";
 								$this->prediction_model->winnerchanged($predictionid, $predictionteam);
@@ -728,6 +742,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
             }
             $data["redirect"] = "site/viewprediction";
             $this->load->view("redirect", $data);
+			
         }
     }
     public function editprediction() {
@@ -737,8 +752,20 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data["title"] = "Edit prediction";
         $data['status'] = $this->prediction_model->getpredictionstatusdropdown();
         $data['predictiongroup'] = $this->predictiongroup_model->getpredictiongroupdropdown();
-        $data['predictionteam'] = $this->teamgroup_model->getteamgroupdropdown();
+        $data['predictionteam'] = $this->predictionteam_model->getpredictionteamdropdown();
         $data["before"] = $this->prediction_model->beforeedit($this->input->get("id"));
+		$temp=$data['before']->starttime;
+		$temp1=explode(" ",$temp);
+		$temp2=$temp1[1];
+		$temp3=explode(":",$temp2);
+	    $temp4=$temp3[0];
+		$temp5=	$temp3[1];
+		$c=$temp4.":".$temp5;
+		$c1=$temp1[0]; 
+		$v=$c1."T".$c;
+		$data['starttime']=$v;
+		$t=$data['before']->venue;
+		echo $t;
         $this->load->view("template", $data);
     }
     public function editpredictionsubmit() {
@@ -749,7 +776,9 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $this->form_validation->set_rules("name", "Name", "trim");
         $this->form_validation->set_rules("status", "Status", "trim");
         $this->form_validation->set_rules("predictionteam", "Winner", "trim");
-        $this->form_validation->set_rules("endtime", "End Time", "trim");
+		 $this->form_validation->set_rules("starttime","Start Time","trim");
+        $this->form_validation->set_rules("endtime","End Time","trim");
+        $this->form_validation->set_rules("venue","Venue","trim");
         $this->form_validation->set_rules("order", "Order", "trim");
         if ($this->form_validation->run() == FALSE) {
             $data["alerterror"] = validation_errors();
@@ -757,8 +786,9 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
             $data["title"] = "Edit prediction";
             $data['status'] = $this->prediction_model->getpredictionstatusdropdown();
             $data['predictiongroup'] = $this->predictiongroup_model->getpredictiongroupdropdown();
-            $data['predictionteam'] = $this->teamgroup_model->getteamgroupdropdown();
+            $data['predictionteam'] = $this->predictionteam_model->getpredictionteamdropdown();
             $data["before"] = $this->prediction_model->beforeedit($this->input->get("id"));
+			
             $this->load->view("template", $data);
         } else {
             $id = $this->input->get_post("id");
@@ -767,9 +797,11 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
             $status = $this->input->get_post("status");
             $predictionteam = $this->input->get_post("predictionteam");
             $this->prediction_model->winnerchanged($id, $predictionteam);
+			$starttime=$this->input->get_post("starttime");
             $endtime = $this->input->get_post("endtime");
+			$venue=$this->input->get_post("venue");
             $order = $this->input->get_post("order");
-            if ($this->prediction_model->edit($id, $predictiongroup, $name, $status, $predictionteam, $endtime, $order) == 0) $data["alerterror"] = "New prediction could not be Updated.";
+            if ($this->prediction_model->edit($id, $predictiongroup, $name, $status, $predictionteam, $starttime, $endtime, $venue, $order) == 0) $data["alerterror"] = "New prediction could not be Updated.";
             else $data["alertsuccess"] = "prediction Updated Successfully.";
             $data["redirect"] = "site/viewprediction";
             $this->load->view("redirect", $data);
