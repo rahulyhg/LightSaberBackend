@@ -35,6 +35,14 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
 
 ")->result();
         foreach ($prediction as $predict) {
+            
+            $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$predict->id'");
+            $querynum = $query->num_rows();
+            if ($querynum != 0) {
+                $query = $query->row();
+                $predict->predicted = $query->teamgroup;
+            }
+            
             $predictioncount = $this->db->query("SELECT COUNT(`id`) as `count`,`teamgroup` FROM `predicto_userprediction` WHERE `teamgroup` <> 0 AND  `prediction`='$predict->id' GROUP BY `teamgroup`")->result();
             if (sizeof($predictioncount) == 1) {
                 if ($predictioncount[0]->teamgroup == $predict->team1id) {
@@ -116,7 +124,7 @@ $prediction->count=$predictioncount;
             $prediction->team1percent = - 1;
         }
         $prediction->team1percent=intval($prediction->team1percent);
-        $userid = $this->session->userdata("id");
+
         $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$predict'");
         $querynum = $query->num_rows();
         if ($querynum != 0) {
