@@ -481,8 +481,8 @@ class Json extends CI_Controller {
         $team = $data['team'];
         $prediction = $data['prediction'];
         $user = $data['user'];
-        $data['message'] = $this->json_model->userpredicts($team, $prediction);
-        $data['message'] = $this->json_model->getpredictionforuser($prediction);
+        $data['message'] = $this->json_model->userpredicts($user,$team, $prediction);
+        $data['message'] = $this->json_model->getpredictionforuser($user,$prediction);
         $this->load->view('json', $data);
     }
     public function getpredictionforuser() {
