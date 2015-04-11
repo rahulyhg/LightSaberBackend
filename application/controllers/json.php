@@ -457,6 +457,8 @@ class Json extends CI_Controller {
         $this->load->view('json', $data);
     }
     public function getuserdetails() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $user = $data['user'];
         $data['message'] = $this->json_model->getuserdetails();
         $this->load->view('json', $data);
     }
@@ -469,6 +471,8 @@ class Json extends CI_Controller {
         $this->load->view('json', $data);
     }
     public function getpredictions() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $user = $data['user'];
         $data['message'] = $this->json_model->getpredictions();
         $this->load->view('json', $data);
     }
@@ -476,6 +480,7 @@ class Json extends CI_Controller {
         $data = json_decode(file_get_contents('php://input'), true);
         $team = $data['team'];
         $prediction = $data['prediction'];
+        $user = $data['user'];
         $data['message'] = $this->json_model->userpredicts($team, $prediction);
         $data['message'] = $this->json_model->getpredictionforuser($prediction);
         $this->load->view('json', $data);
@@ -483,7 +488,8 @@ class Json extends CI_Controller {
     public function getpredictionforuser() {
         $data = json_decode(file_get_contents('php://input'), true);
         $prediction = $data['prediction'];
-        $data['message'] = $this->json_model->getpredictionforuser($prediction);
+        $user = $data['user'];
+        $data['message'] = $this->json_model->getpredictionforuser($user,$prediction);
         $this->load->view('json', $data);
     }
 }

@@ -10,8 +10,7 @@ class Json_model extends CI_Model {
             return $this->session->all_userdata();
         }
     }
-    function getuserdetails() {
-        $userid = $this->session->userdata("id");
+    function getuserdetails($userid) {
         $user = $this->db->query("SELECT * FROM `user` WHERE `id`='$userid'")->row();
         $query = $this->db->query("SELECT COUNT(`id`) as `prediction` FROM `predicto_userprediction` WHERE `user`='$userid'");
         $querynum = $query->num_rows();
@@ -23,8 +22,7 @@ class Json_model extends CI_Model {
         }
         return $user;
     }
-    function getpredictions() {
-        $userid = $this->session->userdata("id");
+    function getpredictions($userid) {
         $prediction = $this->db->query("SELECT `predicto_prediction`.`id`,`predicto_prediction`.`name`,`predicto_prediction`.`status`,
 `predicto_prediction`.`predictionteam` as `winner`,FLOOR(UNIX_TIMESTAMP(`predicto_prediction`.`starttime`)*1000) as `starttime`,FLOOR(UNIX_TIMESTAMP(`predicto_prediction`.`endtime`)*1000) as `endtime`,
 `predicto_prediction`.`venue`,`team11`.`id` as `team1id`,`team22`.`id` as `team2id`,`team11`.`name` as `team1name`,`team22`.`name` as `team2name`
@@ -68,8 +66,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         }
         return $prediction;
     }
-    function userpredicts($team, $prediction) {
-        $userid = $this->session->userdata("id");
+    function userpredicts($userid,$team, $prediction) {
         $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$prediction'");
         $querynum = $query->num_rows();
         if ($querynum == 0) {
@@ -79,8 +76,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         }
         return true;
     }
-    function getpredictionforuser($predict) {
-        $userid = $this->session->userdata("id");
+    function getpredictionforuser($userid,$predict) {
         $prediction = $this->db->query("SELECT `predicto_prediction`.`id`,`predicto_prediction`.`name`,`predicto_prediction`.`status`,
 `predicto_prediction`.`predictionteam` as `winner`,FLOOR(UNIX_TIMESTAMP(`predicto_prediction`.`starttime`)*1000) as `starttime`,FLOOR(UNIX_TIMESTAMP(`predicto_prediction`.`endtime`)*1000) as `endtime`,
 `predicto_prediction`.`venue`,`team11`.`id` as `team1id`,`team22`.`id` as `team2id`,`team11`.`name` as `team1name`,`team22`.`name` as `team2name`
