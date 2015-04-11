@@ -463,8 +463,8 @@ class Json extends CI_Controller {
     public function logout() {
         $this->session->sess_destroy();
         $this->load->library('HybridAuthLib');
-        $twitter = $this->hybridauthlib->authenticate("Twitter");
-        $twitter->logout();
+        $twitter = $this->hybridauthlib->logoutAllProviders();
+        
         $data['message'] = true;
         $this->load->view('json', $data);
     }
