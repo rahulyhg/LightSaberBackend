@@ -37,7 +37,7 @@ class teamgroup_model extends CI_Model {
         return $return;
     }
     public function winnergetteamgroupdropdown($prediction) {
-        $query = $this->db->query("SELECT * FROM `predicto_teamgroup` INNER JOIN `predicto_predictionteam` ON `predicto_teamgroup`.`id` =  `predicto_predictionteam`.`teamgroup` WHERE `predicto_predictionteam`.`prediction`='$prediction' ORDER BY `predicto_teamgroup`.`id` ASC")->result();
+        $query = $this->db->query("SELECT `predicto_teamgroup`.* FROM `predicto_teamgroup` INNER JOIN `predicto_predictionteam` ON `predicto_teamgroup`.`id` =  `predicto_predictionteam`.`teamgroup` WHERE `predicto_predictionteam`.`prediction`='$prediction' ORDER BY `predicto_teamgroup`.`id` ASC")->result();
         $return = array("" => "");
         foreach ($query as $row) {
             $return[$row->id] = $row->name;

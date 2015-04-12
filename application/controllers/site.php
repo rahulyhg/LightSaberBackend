@@ -765,7 +765,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
 		$v=$c1."T".$c;
 		$data['starttime']=$v;
 		$t=$data['before']->venue;
-		echo $t;
+		//echo $t;
         $this->load->view("template", $data);
     }
     public function editpredictionsubmit() {
