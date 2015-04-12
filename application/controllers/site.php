@@ -752,7 +752,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
         $data["title"] = "Edit prediction";
         $data['status'] = $this->prediction_model->getpredictionstatusdropdown();
         $data['predictiongroup'] = $this->predictiongroup_model->getpredictiongroupdropdown();
-        $data['predictionteam'] = $this->teamgroup_model->getteamgroupdropdown();
+        $data['predictionteam'] = $this->teamgroup_model->winnergetteamgroupdropdown($this->input->get("id"));
         $data["before"] = $this->prediction_model->beforeedit($this->input->get("id"));
 		$temp=$data['before']->starttime;
 		$temp1=explode(" ",$temp);
@@ -786,7 +786,7 @@ LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_predictionteam`.`teamgroup`=`p
             $data["title"] = "Edit prediction";
             $data['status'] = $this->prediction_model->getpredictionstatusdropdown();
             $data['predictiongroup'] = $this->predictiongroup_model->getpredictiongroupdropdown();
-            $data['predictionteam'] = $this->teamgroup_model->getteamgroupdropdown();
+            $data['predictionteam'] = $this->teamgroup_model->winnergetteamgroupdropdown($this->input->get("id"));
             $data["before"] = $this->prediction_model->beforeedit($this->input->get("id"));
 			
             $this->load->view("template", $data);
