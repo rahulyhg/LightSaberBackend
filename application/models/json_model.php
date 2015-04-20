@@ -78,7 +78,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
         $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$prediction'");
         $querynum = $query->num_rows();
         if ($querynum == 0) {
-            $this->db->query("INSERT INTO `predicto_userprediction` (`id`, `user`, `teamgroup`, `prediction`) VALUES (NULL, '$userid', '$teamgroup', '$prediction')");
+            $this->db->query("INSERT INTO `predicto_userprediction` (`id`, `user`, `teamgroup`, `prediction`) VALUES (NULL, '$userid', '$team', '$prediction')");
         } else {
             $this->db->query("UPDATE `predicto_userprediction` SET `teamgroup` = '$team' WHERE `user` = '$userid' AND  `prediction` = '$prediction'");
         }
