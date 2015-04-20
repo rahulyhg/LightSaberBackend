@@ -466,7 +466,6 @@ class Json extends CI_Controller {
         $this->session->sess_destroy();
         $this->load->library('HybridAuthLib');
         $twitter = $this->hybridauthlib->logoutAllProviders();
-        
         $data['message'] = true;
         $this->load->view('json', $data);
     }
@@ -481,15 +480,23 @@ class Json extends CI_Controller {
         $team = $data['team'];
         $prediction = $data['prediction'];
         $user = $data['user'];
-        $data['message'] = $this->json_model->userpredicts($user,$team, $prediction);
-        $data['message'] = $this->json_model->getpredictionforuser($user,$prediction);
+        $data['message'] = $this->json_model->userpredicts($user, $team, $prediction);
+        $data['message'] = $this->json_model->getpredictionforuser($user, $prediction);
         $this->load->view('json', $data);
     }
     public function getpredictionforuser() {
         $data = json_decode(file_get_contents('php://input'), true);
         $prediction = $data['prediction'];
         $user = $data['user'];
-        $data['message'] = $this->json_model->getpredictionforuser($user,$prediction);
+        $data['message'] = $this->json_model->getpredictionforuser($user, $prediction);
+        $this->load->view('json', $data);
+    }
+    public function getpredictionforuser() {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $prediction = $data['prediction'];
+        $user = $data['user'];
+        $data["message"]=new stdClass();
+        $data['message']->global = $this->json_model->getleaderboard();
         $this->load->view('json', $data);
     }
 }

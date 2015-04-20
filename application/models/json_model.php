@@ -35,14 +35,14 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
 
 ")->result();
         foreach ($prediction as $predict) {
-            
+
             $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$predict->id'");
             $querynum = $query->num_rows();
             if ($querynum != 0) {
                 $query = $query->row();
                 $predict->predicted = $query->teamgroup;
             }
-            
+
             $predictioncount = $this->db->query("SELECT COUNT(`id`) as `count`,`teamgroup` FROM `predicto_userprediction` WHERE `teamgroup` <> 0 AND  `prediction`='$predict->id' GROUP BY `teamgroup`")->result();
             if (sizeof($predictioncount) == 1) {
                 if ($predictioncount[0]->teamgroup == $predict->team1id) {
@@ -63,9 +63,9 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
                     {
                         $secondtwo=$key;
                     }
-                    
+
                 }
-                
+
                 $predict->team1percent = $predictioncount[$firstone]->count / ($predictioncount[$firstone]->count + $predictioncount[$secondtwo]->count) * 100;
             } else {
                 $predict->team1percent = - 1;
@@ -102,7 +102,7 @@ $prediction->count=$predictioncount;
                 $prediction->team1percent = 0;
             }
         } else if (sizeof($predictioncount) > 1) {
-            
+
             $firstone=0;
                 $secondtwo=0;
                 foreach($predictioncount as $key => $predict2)
@@ -115,11 +115,11 @@ $prediction->count=$predictioncount;
                     {
                         $secondtwo=$key;
                     }
-                    
+
                 }
-                
+
                 $prediction->team1percent = $predictioncount[$firstone]->count / ($predictioncount[$firstone]->count + $predictioncount[$secondtwo]->count) * 100;
-            
+
         } else {
             $prediction->team1percent = - 1;
         }
@@ -149,5 +149,8 @@ $prediction->count=$predictioncount;
             $prediction->tweets = $data;
         }
         return $prediction;
+    }
+    function getleaderboard() {
+      $this->db->query("SELECT * FROM `user` ORDER BY `points` DESC LIMIT 0,10");
     }
 }
