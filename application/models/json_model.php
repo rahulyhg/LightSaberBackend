@@ -151,6 +151,7 @@ $prediction->count=$predictioncount;
         return $prediction;
     }
     function getleaderboard() {
-      $this->db->query("SELECT * FROM `user` ORDER BY `points` DESC LIMIT 0,10");
+      $query=$this->db->query("SELECT * FROM `user` ORDER BY `points` DESC LIMIT 0,10")->result();
+      return $query;
     }
 }

@@ -491,11 +491,10 @@ class Json extends CI_Controller {
         $data['message'] = $this->json_model->getpredictionforuser($user, $prediction);
         $this->load->view('json', $data);
     }
-    public function getpredictionforuser() {
+    public function getleaderboard() {
         $data = json_decode(file_get_contents('php://input'), true);
-        $prediction = $data['prediction'];
         $user = $data['user'];
-        $data["message"]=new stdClass();
+        $data["message"] = new stdClass();
         $data['message']->global = $this->json_model->getleaderboard();
         $this->load->view('json', $data);
     }
