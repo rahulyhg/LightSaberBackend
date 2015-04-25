@@ -76,7 +76,7 @@ INNER  JOIN `predicto_teamgroup` as `team22` ON `team2`.`teamgroup`=`team22`.`id
     }
     function userpredicts($userid,$team, $prediction) {
         $query = $this->db->query("SELECT * FROM `predicto_userprediction` WHERE `user`='$userid' AND `prediction`='$prediction'");
-		$query1=$this->db->query("SELECT * FROM `predicto_prediction` WHERE `prediction` = '$prediction'")->row();
+		$query1=$this->db->query("SELECT * FROM `predicto_prediction` WHERE `id` = '$prediction'")->row();
 		if($query1->status=='0')
 		{
 			return false;
