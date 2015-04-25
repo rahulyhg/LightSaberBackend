@@ -169,12 +169,27 @@ $prediction->count=$predictioncount;
     }
 	
 	function getpredictionteamwise() {
-		$query=$this->db->query("SELECT  `predicto_teamgroup`.`id` ,  `predicto_teamgroup`.`name` , COUNT(  `predicto_teamgroup`.`id` ) AS  `total` 
+		$query=$this->db->query("SELECT `all`.`id`,`all`.`name`,`all`.`total`,`winning`.`totalwins`,`loss`.`totalloss`
+FROM
+(SELECT  `predicto_teamgroup`.`id` ,  `predicto_teamgroup`.`name` , COUNT(  `predicto_teamgroup`.`id` ) AS  `total` 
 FROM  `predicto_userprediction` 
+INNER JOIN `predicto_prediction` ON `predicto_userprediction`.`prediction`=`predicto_prediction`.`id`
 INNER JOIN  `predicto_teamgroup` ON  `predicto_userprediction`.`teamgroup` =  `predicto_teamgroup`.`id` 
-GROUP BY  `predicto_teamgroup`.`id` 
-ORDER BY  `total` DESC 
-LIMIT 0 , 30")->result();
+GROUP BY  `predicto_teamgroup`.`id`) AS `all`
+LEFT OUTER JOIN 
+(SELECT  `predicto_teamgroup`.`id` ,  `predicto_teamgroup`.`name` , COUNT(  `predicto_teamgroup`.`id` ) AS  `totalwins` 
+FROM  `predicto_userprediction` 
+INNER JOIN `predicto_prediction` ON `predicto_userprediction`.`prediction`=`predicto_prediction`.`id` AND `predicto_userprediction`.`teamgroup`=`predicto_prediction`.`predictionteam`
+INNER JOIN  `predicto_teamgroup` ON  `predicto_userprediction`.`teamgroup` =  `predicto_teamgroup`.`id` 
+GROUP BY  `predicto_teamgroup`.`id`) AS `winning` ON `all`.`id`=`winning`.`id`
+LEFT OUTER JOIN 
+(SELECT  `predicto_teamgroup`.`id` ,  `predicto_teamgroup`.`name` , COUNT(  `predicto_teamgroup`.`id` ) AS  `totalloss` 
+FROM  `predicto_userprediction` 
+INNER JOIN `predicto_prediction` ON `predicto_userprediction`.`prediction`=`predicto_prediction`.`id` AND `predicto_userprediction`.`teamgroup`<>`predicto_prediction`.`predictionteam`
+INNER JOIN  `predicto_teamgroup` ON  `predicto_userprediction`.`teamgroup` =  `predicto_teamgroup`.`id` 
+GROUP BY  `predicto_teamgroup`.`id`) AS `loss` ON `all`.`id`=`loss`.`id`
+
+ORDER BY `total` DESC")->result();
 return $query;
 	}
 }
