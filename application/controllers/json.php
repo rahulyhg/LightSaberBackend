@@ -498,8 +498,20 @@ class Json extends CI_Controller {
         $data['message']->global = $this->json_model->getleaderboard();
         $this->load->view('json', $data);
     }
-	public function getpredictionteamwise() {
-		$data['message'] = $this->json_model->getpredictionteamwise();
+    public function getpredictionteamwise() {
+        $data['message'] = $this->json_model->getpredictionteamwise();
         $this->load->view('json', $data);
-	}
+    }
+    public function statuschangetime() {
+        $data['message'] = $this->db->query("UPDATE `predicto_prediction` SET `status` = '0'");
+        $data['message'] = $this->db->query("UPDATE `predicto_prediction` SET `status` = '1' WHERE `predicto_prediction`.`id` IN ( SELECT `id` FROM (
+             SELECT `id` FROM `predicto_prediction`
+             WHERE `predicto_prediction`.`starttime` >= NOW()
+             ORDER BY id ASC
+             LIMIT 0, 2
+         ) as `tmp`
+     );");
+
+        $this->load->view('json', $data);
+    }
 }

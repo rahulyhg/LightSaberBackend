@@ -8,19 +8,19 @@
             <div class=" form-group">
                 <label class="col-sm-2 control-label" for="normal-field">Prediction Group</label>
                 <div class="col-sm-4">
-                    <?php echo form_dropdown( "predictiongroup",$predictiongroup,set_value( 'predictiongroup',$before->predictiongroup),"class='chzn-select form-control'");?>
+                    <?php echo form_dropdown( "predictiongroup",$predictiongroup,set_value( 'predictiongroup',$before->predictiongroup),"class='chzn-select form-control' disabled");?>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="normal-field">Name</label>
                 <div class="col-sm-4">
-                    <input type="text" id="normal-field" class="form-control" name="name" value='<?php echo set_value(' name ',$before->name);?>'>
+                    <input type="text" id="normal-field" class="form-control" name="name" disabled value='<?php echo set_value(' name ',$before->name);?>'>
                 </div>
             </div>
             <div class=" form-group">
                 <label class="col-sm-2 control-label" for="normal-field">Status</label>
                 <div class="col-sm-4">
-                    <?php echo form_dropdown( "status",$status,set_value( 'status',$before->status),"class='chzn-select form-control'");?>
+                    <?php echo form_dropdown( "status12",$status,set_value( 'status',$before->status),"class='chzn-select form-control' disabled");?>
                 </div>
             </div>
             <div class=" form-group">
@@ -29,11 +29,11 @@
                     <?php echo form_dropdown( "predictionteam",$predictionteam,set_value( 'predictionteam',$before->predictionteam),"class='chzn-select form-control'");?>
                 </div>
             </div>
-           
+
                           <div class="form-group">
                             <label class="col-sm-2 control-label" for="normal-field">Start Time</label>
                             <div class="col-sm-4">
-                                <input type="datetime-local" id="normal-field" class="form-control" name="starttime" value='<?php echo set_value(' starttime ',
+                                <input type="datetime-local" id="normal-field" class="form-control" disabled name="starttime" value='<?php echo set_value(' starttime ',
 
 $starttime);?>'>
                             </div>
@@ -43,19 +43,19 @@ $starttime);?>'>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="normal-field">End Time</label>
                 <div class="col-sm-4">
-                    <input type="text" id="normal-field" class="form-control" name="endtime" value='<?php echo set_value(' endtime ',$before->endtime);?>'>
+                    <input type="text" id="normal-field" class="form-control" name="endtime" disabled value='<?php echo set_value(' endtime ',$before->endtime);?>'>
                 </div>
             </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="normal-field">Venue</label>
                 <div class="col-sm-4">
-                    <input type="text" id="normal-field" class="form-control" name="venue" value='<?php echo set_value(' venue ',$before->venue);?>'>
+                    <input type="text" id="normal-field" class="form-control" name="venue" disabled value='<?php echo set_value(' venue ',$before->venue);?>'>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="normal-field">Order</label>
                 <div class="col-sm-4">
-                    <input type="text" id="normal-field" class="form-control" name="order" value='<?php echo set_value(' order ',$before->order);?>'>
+                    <input type="text" id="normal-field" class="form-control" name="order" disabled value='<?php echo set_value(' order ',$before->order);?>'>
                 </div>
             </div>
             <div class="form-group">
