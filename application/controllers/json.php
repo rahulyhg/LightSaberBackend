@@ -498,4 +498,8 @@ class Json extends CI_Controller {
         $data['message']->global = $this->json_model->getleaderboard();
         $this->load->view('json', $data);
     }
+	public function getpredictionteamwise() {
+		$data['message'] = $this->json_model->getpredictionteamwise();
+        $this->load->view('json', $data);
+	}
 }

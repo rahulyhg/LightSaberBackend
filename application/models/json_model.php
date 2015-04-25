@@ -167,4 +167,14 @@ $prediction->count=$predictioncount;
 
       return $query;
     }
+	
+	function getpredictionteamwise() {
+		$query=$this->db->query("SELECT  `predicto_teamgroup`.`id` ,  `predicto_teamgroup`.`name` , COUNT(  `predicto_teamgroup`.`id` ) AS  `total` 
+FROM  `predicto_userprediction` 
+INNER JOIN  `predicto_teamgroup` ON  `predicto_userprediction`.`teamgroup` =  `predicto_teamgroup`.`id` 
+GROUP BY  `predicto_teamgroup`.`id` 
+ORDER BY  `total` DESC 
+LIMIT 0 , 30")->result();
+return $query;
+	}
 }
