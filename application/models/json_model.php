@@ -185,7 +185,7 @@ GROUP BY  `predicto_teamgroup`.`id`) AS `winning` ON `all`.`id`=`winning`.`id`
 LEFT OUTER JOIN 
 (SELECT  `predicto_teamgroup`.`id` ,  `predicto_teamgroup`.`name` , COUNT(  `predicto_teamgroup`.`id` ) AS  `totalloss` 
 FROM  `predicto_userprediction` 
-INNER JOIN `predicto_prediction` ON `predicto_userprediction`.`prediction`=`predicto_prediction`.`id` AND `predicto_userprediction`.`teamgroup`<>`predicto_prediction`.`predictionteam`
+INNER JOIN `predicto_prediction` ON `predicto_userprediction`.`prediction`=`predicto_prediction`.`id` AND `predicto_userprediction`.`teamgroup`<>`predicto_prediction`.`predictionteam` AND `predicto_prediction`.`predictionteam`<>'0'
 INNER JOIN  `predicto_teamgroup` ON  `predicto_userprediction`.`teamgroup` =  `predicto_teamgroup`.`id` 
 GROUP BY  `predicto_teamgroup`.`id`) AS `loss` ON `all`.`id`=`loss`.`id`
 
