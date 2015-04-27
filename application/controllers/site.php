@@ -694,12 +694,12 @@ class Site extends CI_Controller {
         }
         if ($orderby == "") {
             $orderby = "id";
-            $orderorder = "ASC";
+            $orderorder = "DESC";
         }
         $data["message"] = $this->chintantable->query($pageno, $maxrow, $orderby, $orderorder, $search, $elements, "FROM `predicto_prediction` LEFT OUTER JOIN `predicto_predictiongroup` ON `predicto_prediction`.`predictiongroup`=`predicto_predictiongroup`.`id` LEFT OUTER JOIN `predicto_predictionteam` ON `predicto_prediction`.`predictionteam`=`predicto_predictionteam`.`id`
 LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_prediction`.`predictionteam`=`predicto_teamgroup`.`id`
-INNER JOIN  `predicto_userprediction` ON `predicto_prediction`.`id`= `predicto_userprediction`.`prediction`
-","","GROUP BY  `predicto_prediction`.`id`");
+LEFT OUTER JOIN  `predicto_userprediction` ON `predicto_prediction`.`id`= `predicto_userprediction`.`prediction`
+","WHERE `predicto_prediction`.`status`=0 AND `predicto_prediction`.`starttime`<NOW() ","GROUP BY  `predicto_prediction`.`id`");
         $this->load->view("json", $data);
     }
     public function createprediction() {
