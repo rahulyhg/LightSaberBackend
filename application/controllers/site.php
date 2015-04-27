@@ -16,11 +16,17 @@ class Site extends CI_Controller {
         if (!in_array($accesslevel, $access)) redirect(base_url() . 'index.php/site?alerterror=You do not have access to this page. ', 'refresh');
     }
     public function index() {
-        $access = array("1", "2");
+//        $access = array("1", "2");
+//        $this->checkaccess($access);
+//        $data['page'] = 'dashboard';
+//        $data['title'] = 'Welcome';
+//        $this->load->view('template', $data);
+        $access = array("1");
         $this->checkaccess($access);
-        $data['page'] = 'dashboard';
-        $data['title'] = 'Welcome';
-        $this->load->view('template', $data);
+        $data["page"] = "viewprediction";
+        $data["base_url"] = site_url("site/viewpredictionjson");
+        $data["title"] = "View prediction";
+        $this->load->view("template", $data);
     }
     public function createuser() {
         $access = array("1");
@@ -696,7 +702,7 @@ class Site extends CI_Controller {
             $orderby = "id";
             $orderorder = "DESC";
         }
-        $data["message"] = $this->chintantable->query($pageno, $maxrow, $orderby, $orderorder, $search, $elements, "FROM `predicto_prediction` LEFT OUTER JOIN `predicto_predictiongroup` ON `predicto_prediction`.`predictiongroup`=`predicto_predictiongroup`.`id` LEFT OUTER JOIN `predicto_predictionteam` ON `predicto_prediction`.`predictionteam`=`predicto_predictionteam`.`id`
+        $data["message"] = $this->chintantable->query($pageno, 5, $orderby, $orderorder, $search, $elements, "FROM `predicto_prediction` LEFT OUTER JOIN `predicto_predictiongroup` ON `predicto_prediction`.`predictiongroup`=`predicto_predictiongroup`.`id` LEFT OUTER JOIN `predicto_predictionteam` ON `predicto_prediction`.`predictionteam`=`predicto_predictionteam`.`id`
 LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_prediction`.`predictionteam`=`predicto_teamgroup`.`id`
 LEFT OUTER JOIN  `predicto_userprediction` ON `predicto_prediction`.`id`= `predicto_userprediction`.`prediction`
 ","WHERE `predicto_prediction`.`status`=0 AND `predicto_prediction`.`starttime`<NOW() ","GROUP BY  `predicto_prediction`.`id`");
