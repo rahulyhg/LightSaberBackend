@@ -679,6 +679,11 @@ class Site extends CI_Controller {
         $elements[10]->sort="1";
         $elements[10]->header="Venue";
         $elements[10]->alias="venue";
+        $elements[11]=new stdClass();
+        $elements[11]->field="count(`predicto_prediction`.`id`)";
+        $elements[11]->sort="1";
+        $elements[11]->header="Total Predictions";
+        $elements[11]->alias="total";
         $search = $this->input->get_post("search");
         $pageno = $this->input->get_post("pageno");
         $orderby = $this->input->get_post("orderby");
@@ -692,7 +697,9 @@ class Site extends CI_Controller {
             $orderorder = "ASC";
         }
         $data["message"] = $this->chintantable->query($pageno, $maxrow, $orderby, $orderorder, $search, $elements, "FROM `predicto_prediction` LEFT OUTER JOIN `predicto_predictiongroup` ON `predicto_prediction`.`predictiongroup`=`predicto_predictiongroup`.`id` LEFT OUTER JOIN `predicto_predictionteam` ON `predicto_prediction`.`predictionteam`=`predicto_predictionteam`.`id`
-LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_prediction`.`predictionteam`=`predicto_teamgroup`.`id`");
+LEFT OUTER JOIN  `predicto_teamgroup`ON `predicto_prediction`.`predictionteam`=`predicto_teamgroup`.`id`
+INNER JOIN  `predicto_userprediction` ON `predicto_prediction`.`id`= `predicto_userprediction`.`prediction`
+","","GROUP BY  `predicto_prediction`.`id`");
         $this->load->view("json", $data);
     }
     public function createprediction() {
