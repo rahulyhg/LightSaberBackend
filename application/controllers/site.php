@@ -690,7 +690,7 @@ class Site extends CI_Controller {
         $orderorder = $this->input->get_post("orderorder");
         $maxrow = $this->input->get_post("maxrow");
         if ($maxrow == "") {
-            $maxrow = 20;
+            $maxrow = 5;
         }
         if ($orderby == "") {
             $orderby = "id";
