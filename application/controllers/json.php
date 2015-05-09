@@ -514,4 +514,9 @@ class Json extends CI_Controller {
 
         $this->load->view('json', $data);
     }
+    public function getwinsnloses() {
+        $data['message'] = $this->db->query("");
+
+        $this->load->view('json', $data);
+    }
 }

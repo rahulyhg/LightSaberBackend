@@ -138,7 +138,7 @@ class HAuth extends CI_Controller {
 
         if($image=="")
         {
-            $data["message"]=$facebook->api()->api("v2.2/me/feed", "post", array(
+            $data["message"]=$facebook->api()->api("v2.3/me/feed", "post", array(
                 "message" => "$message",
                 "link"=>"$link"
             ));
@@ -182,6 +182,15 @@ class HAuth extends CI_Controller {
             }
         }
 
+    }
+    
+    public function getfbfriends() {
+        $facebook = $this->hybridauthlib->authenticate("Facebook");
+        $facebookid = $facebook->getUserProfile();
+        $facebookid = $facebookid->identifier;
+        $facebookreturn=$facebook->api()->api("v2.3/$facebookid/friends?limit=100", "get");
+        $data["message"]=$this->json_model->getfriendsleaderboard($facebookreturn);
+        $this->load->view("json",$data);
     }
 
 }

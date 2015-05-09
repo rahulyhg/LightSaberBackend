@@ -156,14 +156,22 @@ $prediction->count=$predictioncount;
         return $prediction;
     }
     function getleaderboard() {
-      $query=$this->db->query("SELECT `user`.* FROM `user`  ORDER BY `points` DESC LIMIT 0,50")->result();
+      $query=$this->db->query("SELECT `user`.*, count(`predicto_userprediction`.`user`) as `predictions` FROM `user` LEFT OUTER JOIN `predicto_userprediction` ON `user`.`id`=`predicto_userprediction`.`user` AND `predicto_userprediction`.`teamgroup`>0 GROUP BY `user`.`id` ORDER BY `points` DESC,`predictions` DESC LIMIT 0,50")->result();
 
-      foreach($query as $row)
-      {
-          $userid=$row->id;
-          $query2 = $this->db->query("SELECT COUNT(`id`) as `prediction` FROM `predicto_userprediction` WHERE `user`='$userid'")->row();
-          $row->predictions=$query2->prediction;
-      }
+
+      return $query;
+    }
+    
+    function getfriendsleaderboard($facebookfriends) {
+        $facebookfriendid=$facebookfriends["data"];
+        $str="";
+        foreach($facebookfriendid as $friend)
+        {
+            $str.=$friend['id'].",";
+        }
+        $str=substr($str,0,-1);
+        $query=$this->db->query("SELECT `user`.*, count(`predicto_userprediction`.`user`) as `predictions` FROM `user` LEFT OUTER JOIN `predicto_userprediction` ON `user`.`id`=`predicto_userprediction`.`user` AND `predicto_userprediction`.`teamgroup`>0 WHERE `user`.`socialid` IN ($str) GROUP BY `user`.`id`  ORDER BY `points` DESC,`predictions` DESC LIMIT 0,50")->result();
+
 
       return $query;
     }

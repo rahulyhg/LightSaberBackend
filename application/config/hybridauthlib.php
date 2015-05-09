@@ -38,8 +38,8 @@ $config =
 			"Facebook" => array (
 				"enabled" => true,
 				"keys"    => array ( "id" => "1589474464632854", "secret" => "1a2d48ece39d708c113a4ed35a1f5323" ),
-                "scope"   => "email, user_about_me, user_birthday, user_friends ,user_hometown, user_website, offline_access, read_stream"
-			),
+                "scope"   => "email, user_about_me, user_birthday, user_friends ,user_hometown, user_website"
+            ),
 
 			"Twitter" => array (
 				"enabled" => true,
